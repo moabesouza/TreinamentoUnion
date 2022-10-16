@@ -1,0 +1,52 @@
+﻿@model IEnumerable<EstudanteViewModel>
+@{
+    ViewData["Title"] = "Home Page";
+    // lista IEnumerable<T>
+    // 1 - Exibir a lista
+    // 2 - Formata como table boostrap
+    // Lembrar foreach...
+    //@Html.DisplayFor(modelItem => item.Name)
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Id</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Matricula</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>           
+
+            @foreach(var item in Model){
+                <tr>
+                    <td>
+                        @item.Id
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nome)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Matricula)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+    
+</div>
