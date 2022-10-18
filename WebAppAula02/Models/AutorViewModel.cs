@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace WebAppAula02.Models
 {
-    public class AutorViewModel
+    public class AutorViewModel: Base
     {
-        public int Id { get; set; }
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public string Nome { get; set; }
 
+        /* EF */
         public IEnumerable<LivroViewModel> Livros { get; set; }
     }
+
+
 }

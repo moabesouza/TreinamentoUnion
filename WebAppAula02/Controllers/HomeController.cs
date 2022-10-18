@@ -15,34 +15,7 @@ namespace WebAppAula02.Controllers
 
         public IActionResult Index()
         {
-            var listaEstudantes = new List<EstudanteViewModel>();
-
-            var x = new EstudanteViewModel()
-            {
-                Id = 1,
-                Nome = "Maria",
-                Matricula = ""
-            };
-
-            var y = new EstudanteViewModel()
-            {
-                Id = 2,
-                Nome = "Edu",
-                Matricula = ""
-            };
-
-            var z = new EstudanteViewModel()
-            {
-                Id = 3,
-                Nome = "Caio",
-                Matricula = ""
-            };
-
-            listaEstudantes.Add(x);
-            listaEstudantes.Add(y);
-            listaEstudantes.Add(z);
-
-            return View(listaEstudantes);
+            return View();
         }
 
         public IActionResult Privacy()
