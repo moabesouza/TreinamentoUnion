@@ -1,35 +1,43 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebAppAula02.Models;
+using WebAppAula02.Repository.Interfaces;
 
 namespace WebAppAula02.Controllers
 {
     public class AutorController : Controller
     {
-        // GET: AutorController
-        public ActionResult Index()
+        private readonly IAutorRepository _autorRespository;
+
+        public AutorController(IAutorRepository autorRespository)
         {
-            return View();
+            _autorRespository = autorRespository;
         }
 
-        // GET: AutorController/Details/5
+        public async Task<IActionResult> Index()
+        {
+            var aux = await _autorRespository.GetAll();   
+            return View(aux);
+        }
+
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: AutorController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: AutorController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(AutorViewModel novoAutor)
         {
             try
             {
+                if(!ModelState.IsValid) return View(novoAutor);
+                await _autorRespository.Add(novoAutor);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -38,19 +46,26 @@ namespace WebAppAula02.Controllers
             }
         }
 
-        // GET: AutorController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var autor = await _autorRespository.Get(id);
+
+            if (autor == null) return NotFound();
+
+
+            return View(autor);
         }
 
-        // POST: AutorController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(AutorViewModel autor)
         {
             try
             {
+                if (!ModelState.IsValid) return View(autor);
+
+                await _autorRespository.Update(autor);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -59,25 +74,28 @@ namespace WebAppAula02.Controllers
             }
         }
 
-        // GET: AutorController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            var autor = await _autorRespository.Get(id);
+
+            if (autor == null) return NotFound();
+
+            return View(autor);
         }
 
-        // POST: AutorController/Delete/5
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+
+            var autor = await _autorRespository.FirstOrDefault( x => x.Id == id);
+
+            if (autor == null) return NotFound();
+
+            await _autorRespository.Remove(id);
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

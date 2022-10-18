@@ -29,6 +29,11 @@ namespace WebAppAula02.Repository
         {
             return await _context.Set<T>().AsNoTracking().Where(predicate).ToListAsync();
         }
+
+        public virtual async Task<T> FirstOrDefault(Expression<Func<T, bool>> predicate)
+        {
+            return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(predicate);
+        }
         public virtual async Task Add(T entity)
         {
             await _context.AddAsync(entity);
