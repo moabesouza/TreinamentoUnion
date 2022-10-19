@@ -8,10 +8,13 @@ namespace WebAppAula02.Controllers
     public class AutorController : Controller
     {
         private readonly IAutorRepository _autorRespository;
+        private readonly ILivroRepository _livroRespository;
 
-        public AutorController(IAutorRepository autorRespository)
+        public AutorController(IAutorRepository autorRespository,
+            ILivroRepository livroRespository)
         {
             _autorRespository = autorRespository;
+            _livroRespository = livroRespository;
         }
 
         public async Task<IActionResult> Index()
@@ -20,9 +23,21 @@ namespace WebAppAula02.Controllers
             return View(aux);
         }
 
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            return View();
+            var autor = await _autorRespository.Get(id);
+
+            if (autor == null) return NotFound();
+
+            var listaLivros = await _livroRespository.GetWhere(l => l.AutorId == id);
+
+            var detalhesAutor = new AutorLivrosVM()
+            {
+                Nome = autor.Nome,
+                Livros = listaLivros != null ? listaLivros : new List<LivroViewModel>()
+            };
+
+            return View(detalhesAutor);
         }
 
         public ActionResult Create()

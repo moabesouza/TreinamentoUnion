@@ -1,35 +1,52 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebAppAula02.Models;
+using WebAppAula02.Repository;
+using WebAppAula02.Repository.Interfaces;
 
 namespace WebAppAula02.Controllers
 {
     public class EstudanteController : Controller
     {
-        // GET: EstudanteController
-        public ActionResult Index()
+        private readonly IEstudanteRepository _estudanteRepository;
+
+        public EstudanteController(IEstudanteRepository estudanteRepository)
         {
-            return View();
+            _estudanteRepository = estudanteRepository;
         }
 
-        // GET: EstudanteController/Details/5
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Index()
         {
-            return View();
+
+            var listaEstudantes = await _estudanteRepository.GetAll();
+
+            return View(listaEstudantes);
         }
 
-        // GET: EstudanteController/Create
+        public async Task<IActionResult> Details(int id)
+        {
+            var estudante = await _estudanteRepository.Get(id);
+
+            if (estudante == null) return NotFound();
+
+            return View(estudante);
+        }
+
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: EstudanteController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(EstudanteViewModel novoEstudante)
         {
             try
             {
+                if (!ModelState.IsValid) return View(novoEstudante);
+
+                await _estudanteRepository.Add(novoEstudante);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -38,46 +55,53 @@ namespace WebAppAula02.Controllers
             }
         }
 
-        // GET: EstudanteController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
+            var estudante = await _estudanteRepository.Get(id);
+
+            if (estudante == null) return NotFound();
+
+            return View(estudante);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EstudanteViewModel estudante)
+        {
+            try
+            {
+                if (!ModelState.IsValid) return View(estudante);
+
+                await _estudanteRepository.Update(estudante);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var estudante = await _estudanteRepository.Get(id);
+
+            if (estudante == null) return NotFound();
+
             return View();
         }
 
-        // POST: EstudanteController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            var estudante = await _estudanteRepository.FirstOrDefault(x => x.Id == id);
 
-        // GET: EstudanteController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+            if (estudante == null) return NotFound();
 
-        // POST: EstudanteController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await _estudanteRepository.Remove(id);
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -1,83 +1,135 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using WebAppAula02.Models;
+using WebAppAula02.Repository;
+using WebAppAula02.Repository.Interfaces;
 
 namespace WebAppAula02.Controllers
 {
     public class LivroController : Controller
     {
-        // GET: LivroController
-        public ActionResult Index()
+        private readonly ILivroRepository _livroRespository;
+        private readonly IEstudanteRepository _estudanteRepository;
+        private readonly IAutorRepository _autorRespository;
+        private readonly IReservaRepository _reservaRespository;
+
+
+        public LivroController(ILivroRepository livroRespository,
+            IEstudanteRepository estudanteRepository,
+            IAutorRepository autorRespository,
+            IReservaRepository reservaRespository)
         {
+            _livroRespository = livroRespository;
+            _estudanteRepository = estudanteRepository;
+            _autorRespository = autorRespository;
+            _reservaRespository = reservaRespository;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var listaLivros = _livroRespository.GetAll();
+
+            return View(listaLivros);
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var livro = await _livroRespository.Get(id);
+
+            if (livro == null) return NotFound();
+
+            return View(livro);
+        }
+
+        public async Task<IActionResult> Create()
+        {
+            CreateCombos();
             return View();
         }
 
-        // GET: LivroController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: LivroController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: LivroController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(LivroViewModel novoLivro)
         {
             try
             {
+                if (!ModelState.IsValid) return View(novoLivro);
+
+                await _livroRespository.Add(novoLivro);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
+                CreateCombos();
                 return View();
             }
         }
 
-        // GET: LivroController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var livro = await _livroRespository.Get(id);
+
+            if (livro == null) return NotFound();
+
+            CreateCombos();
+            return View(livro);
         }
 
-        // POST: LivroController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(LivroViewModel livro)
         {
             try
             {
+                if (!ModelState.IsValid) return View(livro);
+
+                await _livroRespository.Update(livro);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
+                CreateCombos();
                 return View();
             }
         }
 
-        // GET: LivroController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            var livro = await _livroRespository.Get(id);
+
+            if (livro == null) return NotFound();
+
+            return View(livro);
         }
 
-        // POST: LivroController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var livro = await _livroRespository.FirstOrDefault(x => x.Id == id);
+
+            if (livro == null) return NotFound();
+
+            await _livroRespository.Remove(id);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        private void CreateCombos()
+        {
+            var l1 = _autorRespository.GetAll().Result;
+
+            ViewBag.Autores = new SelectList(l1,
+            "Id", "Name");
+
+            var l2 = _estudanteRepository.GetAll().Result;
+
+            ViewBag.Estudante = new SelectList(l2,
+            "Id", "Name");
         }
     }
 }
