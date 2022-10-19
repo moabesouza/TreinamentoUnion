@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 using WebAppAula02.Models;
 using WebAppAula02.Repository;
 using WebAppAula02.Repository.Interfaces;
@@ -123,13 +124,20 @@ namespace WebAppAula02.Controllers
         {
             var l1 = _autorRespository.GetAll().Result;
 
-            ViewBag.Autores = new SelectList(l1,
-            "Id", "Name");
+            ViewBag.Autores = l1.Select(x => new SelectListItem
+            {
+                Text = x.Nome,
+                Value = x.Id.ToString()
+            });
 
+            
             var l2 = _estudanteRepository.GetAll().Result;
 
-            ViewBag.Estudante = new SelectList(l2,
-            "Id", "Name");
+            ViewBag.Estudante = l2.Select(x => new SelectListItem
+            {
+                Text = x.Nome,
+                Value = x.Id.ToString()
+            });
         }
     }
 }
