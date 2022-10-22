@@ -20,15 +20,15 @@ namespace WebAppAula02.Migrations
                     DiaReserva = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DiaDevolucao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LivrosId = table.Column<int>(type: "int", nullable: false),
-                    EstudantesId = table.Column<int>(type: "int", nullable: false)
+                    UsuariosId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reservas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reservas_Estudantes_EstudantesId",
-                        column: x => x.EstudantesId,
-                        principalTable: "Estudantes",
+                        name: "FK_Reservas_Usuarios_UsuariosId",
+                        column: x => x.UsuariosId,
+                        principalTable: "Usuarios",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -40,9 +40,9 @@ namespace WebAppAula02.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservas_EstudantesId",
+                name: "IX_Reservas_UsuariosId",
                 table: "Reservas",
-                column: "EstudantesId");
+                column: "UsuariosId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservas_LivrosId",

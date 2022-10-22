@@ -61,7 +61,7 @@ namespace WebAppAula02.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Estudantes");
+                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("WebAppAula02.Models.LivroViewModel", b =>
@@ -114,7 +114,7 @@ namespace WebAppAula02.Migrations
                     b.Property<int>("EstudanteId")
                         .HasColumnType("int");
 
-                    b.Property<int>("EstudantesId")
+                    b.Property<int>("UsuariosId")
                         .HasColumnType("int");
 
                     b.Property<int>("LivroId")
@@ -125,7 +125,7 @@ namespace WebAppAula02.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EstudantesId");
+                    b.HasIndex("UsuariosId");
 
                     b.HasIndex("LivrosId");
 
@@ -183,9 +183,9 @@ namespace WebAppAula02.Migrations
 
             modelBuilder.Entity("WebAppAula02.Models.Reserva", b =>
                 {
-                    b.HasOne("WebAppAula02.Models.EstudanteViewModel", "Estudantes")
+                    b.HasOne("WebAppAula02.Models.EstudanteViewModel", "Usuarios")
                         .WithMany()
-                        .HasForeignKey("EstudantesId")
+                        .HasForeignKey("UsuariosId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -195,7 +195,7 @@ namespace WebAppAula02.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Estudantes");
+                    b.Navigation("Usuarios");
 
                     b.Navigation("Livros");
                 });

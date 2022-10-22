@@ -8,18 +8,17 @@ using WebAppAula02.Repository.Interfaces;
 
 namespace WebAppAula02.Controllers
 {
-    public class LivroController : Controller
+    public class ReservaController : Controller
     {
         private readonly ILivroRepository _livroRespository;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IAutorRepository _autorRespository;
         private readonly IReservaRepository _reservaRespository;
 
-
-        public LivroController(ILivroRepository livroRespository,
-            IUsuarioRepository usuarioRepository,
-            IAutorRepository autorRespository,
-            IReservaRepository reservaRespository)
+        public ReservaController(ILivroRepository livroRespository,
+         IUsuarioRepository usuarioRepository,
+         IAutorRepository autorRespository,
+         IReservaRepository reservaRespository)
         {
             _livroRespository = livroRespository;
             _usuarioRepository = usuarioRepository;
@@ -27,24 +26,24 @@ namespace WebAppAula02.Controllers
             _reservaRespository = reservaRespository;
         }
 
-        
 
         public async Task<IActionResult> Index()
         {
-            var listaLivros = await _livroRespository.GetAll();
-            return View(listaLivros);
+
+            var listaReserva = await _reservaRespository.GetAll();
+
+            return View(listaReserva);
         }
 
         public async Task<IActionResult> Details(int id)
         {
-            var livro = await _livroRespository.Get(id);
+            var reserva = await _reservaRespository.Get(id);
 
-            if (livro == null) return NotFound();
+            if (reserva == null) return NotFound();
 
-            return View(livro);
+            return View(reserva);
         }
 
-       
         public async Task<IActionResult> Create()
         {
             CreateCombos();
@@ -53,13 +52,13 @@ namespace WebAppAula02.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(LivroViewModel novoLivro)
+        public async Task<IActionResult> Create(Reserva novaReserva)
         {
             try
             {
-                if (!ModelState.IsValid) return View(novoLivro);
+                if (!ModelState.IsValid) return View(novaReserva);
 
-                await _livroRespository.Add(novoLivro);
+                await _reservaRespository.Add(novaReserva);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -72,23 +71,23 @@ namespace WebAppAula02.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var livro = await _livroRespository.Get(id);
+            var reserva = await _reservaRespository.Get(id);
 
-            if (livro == null) return NotFound();
+            if (reserva == null) return NotFound();
 
             CreateCombos();
-            return View(livro);
+            return View(reserva);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(LivroViewModel livro)
+        public async Task<IActionResult> Edit(Reserva reserva)
         {
             try
             {
-                if (!ModelState.IsValid) return View(livro);
+                if (!ModelState.IsValid) return View(reserva);
 
-                await _livroRespository.Update(livro);
+                await _reservaRespository.Update(reserva);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -101,22 +100,22 @@ namespace WebAppAula02.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var livro = await _livroRespository.Get(id);
+            var reserva = await _reservaRespository.Get(id);
 
-            if (livro == null) return NotFound();
+            if (reserva == null) return NotFound();
 
-            return View(livro);
+            return View(reserva);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var livro = await _livroRespository.FirstOrDefault(x => x.Id == id);
+            var reserva = await _reservaRespository.FirstOrDefault(x => x.Id == id);
 
-            if (livro == null) return NotFound();
+            if (reserva == null) return NotFound();
 
-            await _livroRespository.Remove(id);
+            await _reservaRespository.Remove(id);
 
             return RedirectToAction(nameof(Index));
         }
@@ -124,22 +123,26 @@ namespace WebAppAula02.Controllers
 
         private void CreateCombos()
         {
-            var l1 = _autorRespository.GetAll().Result;
 
-            ViewBag.Autores = l1.Select(x => new SelectListItem
-            {
-                Text = x.Nome,
-                Value = x.Id.ToString()
-            });
+            var l1 = _usuarioRepository.GetAll().Result;
 
-            
-            var l2 = _usuarioRepository.GetAll().Result;
-
-            ViewBag.UsuarioId = l2.Select(x => new SelectListItem
+            ViewBag.UsuarioId = l1.Select(x => new SelectListItem
             {
                 Text = x.Login,
                 Value = x.Id.ToString()
             });
+
+
+            var l2 = _livroRespository.GetAll().Result;
+
+            ViewBag.Livros = l2.Select(x => new SelectListItem
+            {
+                Text = x.Titulo,
+                Value = x.Id.ToString()
+            });
+
+
+           
 
 
         }

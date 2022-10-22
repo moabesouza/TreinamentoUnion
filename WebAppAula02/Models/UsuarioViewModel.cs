@@ -4,7 +4,7 @@ namespace WebAppAula02.Models
 {
     public class UsuarioViewModel : Base
     {
-
+        
         public string Nome { get; set; }
         public string Login { get; set; }
         public string Email { get; set; }

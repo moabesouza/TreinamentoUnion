@@ -22,7 +22,7 @@ namespace WebAppAula02.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Estudantes",
+                name: "Usuarios",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -33,7 +33,7 @@ namespace WebAppAula02.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Estudantes", x => x.Id);
+                    table.PrimaryKey("PK_Usuarios", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -68,7 +68,7 @@ namespace WebAppAula02.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Estudantes");
+                name: "Usuarios");
 
             migrationBuilder.DropTable(
                 name: "Livros");
