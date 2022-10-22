@@ -5,6 +5,7 @@ namespace WebAppAula02.Repository.Interfaces
 {
     public interface IRepository<T> : IDisposable where T : Base
     {
+        UsuarioViewModel BuscarLogin(string login);
         Task<T> Get(int id);
         Task<List<T>> GetAll();
         Task<IEnumerable<T>> GetWhere(Expression<Func<T, bool>> predicate);

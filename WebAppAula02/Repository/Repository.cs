@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using WebAppAula02.Data;
 using WebAppAula02.Repository.Interfaces;
 using WebAppAula02.Models;
+using NuGet.Protocol.Plugins;
 
 
 namespace WebAppAula02.Repository
@@ -14,6 +15,7 @@ namespace WebAppAula02.Repository
         {
             _context = context;
         }
+
 
         public virtual async Task<T> Get(int id)
         {
@@ -59,6 +61,12 @@ namespace WebAppAula02.Repository
         {
             _context?.Dispose();
         }
+
+        public UsuarioViewModel BuscarLogin(string login)
+        {
+            return _context.Usuarios.FirstOrDefault(x => x.Login.ToUpper() == login.ToUpper());
+        }
+
 
     }
 }

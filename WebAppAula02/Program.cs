@@ -3,6 +3,10 @@ using WebAppAula02.Data;
 using WebAppAula02.Repository.Interfaces;
 using WebAppAula02.Repository;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
+using NuGet.Protocol.Core.Types;
+using WebAppAula02.Auxiliar;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,11 +62,20 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 
 // Add Dependency
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IAutorRepository, AutorRepository>();
 builder.Services.AddScoped<IEstudanteRepository, EstudanteRepository>();
 builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 builder.Services.AddScoped<IReservaRepository, ReservaRepository>();
-
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<ILoginRepository, LoginRepository>();
+builder.Services.AddScoped<ISessao, Sessao>();
+builder.Services.AddSession(o =>
+{
+    o.Cookie.HttpOnly = true;
+    o.Cookie.IsEssential = true;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -80,9 +93,11 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.UseSession();//habilitar sessões do projeto
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Login}/{action=Index}/{id?}");
 
 app.Run();
 
