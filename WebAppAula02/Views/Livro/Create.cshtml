@@ -1,10 +1,13 @@
 ﻿@model WebAppAula02.Models.LivroViewModel
 
+
+
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1>@ViewBag.pro</h1>
+
+
 <h1>Create</h1>
 
 <h4>LivroViewModel</h4>
@@ -24,15 +27,26 @@
                 <span asp-validation-for="Sinopse" class="text-danger"></span>
             </div>
             <div>
-                <select asp-for="AutorId"
+               @* <select asp-for="AutorId"
                         asp-items="ViewBag.Autores">
-                </select>
-            @*  <select class="form-control" id="AutorId" name="AutorId">
+                </select>*@
+
+
+           <select class="form-control" id="AutorId" name="AutorId">
                     @foreach (var option in ViewBag.Autores)
                     {
+
                         <option value="@option.Value">@option.Text</option>
                     }
-                </select>  *@
+                </select> 
+
+                @*<div class="form-group">
+                    <label asp-for="AutorId" id="AutorId" class="control-label"></label>
+                    <select asp-for="AutorId" id="AutorId" class="form-control" asp-items="ViewBag.Autores"></select>
+                </div>*@
+               
+
+
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">

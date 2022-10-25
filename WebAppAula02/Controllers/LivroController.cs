@@ -1,10 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Data;
+using System.Net.Http;
+using WebAppAula02.Data;
 using WebAppAula02.Models;
 using WebAppAula02.Repository;
 using WebAppAula02.Repository.Interfaces;
+
 
 namespace WebAppAula02.Controllers
 {
@@ -27,13 +33,15 @@ namespace WebAppAula02.Controllers
             _reservaRespository = reservaRespository;
         }
 
-        
+
 
         public async Task<IActionResult> Index()
         {
             var listaLivros = await _livroRespository.GetAll();
             return View(listaLivros);
         }
+
+
 
         public async Task<IActionResult> Details(int id)
         {
@@ -44,12 +52,18 @@ namespace WebAppAula02.Controllers
             return View(livro);
         }
 
-       
+
+
+
+        
         public async Task<IActionResult> Create()
         {
-            CreateCombos();
+            CreateCombo();
             return View();
         }
+
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -65,7 +79,7 @@ namespace WebAppAula02.Controllers
             }
             catch
             {
-                CreateCombos();
+                CreateCombo();
                 return View();
             }
         }
@@ -76,7 +90,7 @@ namespace WebAppAula02.Controllers
 
             if (livro == null) return NotFound();
 
-            CreateCombos();
+            CreateCombo();
             return View(livro);
         }
 
@@ -94,7 +108,7 @@ namespace WebAppAula02.Controllers
             }
             catch
             {
-                CreateCombos();
+                CreateCombo();
                 return View();
             }
         }
@@ -122,22 +136,14 @@ namespace WebAppAula02.Controllers
         }
 
 
-        private void CreateCombos()
+
+        private void CreateCombo()
         {
             var l1 = _autorRespository.GetAll().Result;
 
             ViewBag.Autores = l1.Select(x => new SelectListItem
             {
                 Text = x.Nome,
-                Value = x.Id.ToString()
-            });
-
-            
-            var l2 = _usuarioRepository.GetAll().Result;
-
-            ViewBag.UsuarioId = l2.Select(x => new SelectListItem
-            {
-                Text = x.Login,
                 Value = x.Id.ToString()
             });
 

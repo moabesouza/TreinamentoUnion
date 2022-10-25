@@ -16,5 +16,6 @@ namespace WebAppAula02.Models
 
         /* EF Relations */
         public AutorViewModel Autores { get; set; }
+        
     }
 }

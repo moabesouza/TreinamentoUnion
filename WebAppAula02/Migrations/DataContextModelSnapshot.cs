@@ -39,31 +39,6 @@ namespace WebAppAula02.Migrations
                     b.ToTable("Autores");
                 });
 
-            modelBuilder.Entity("WebAppAula02.Models.EstudanteViewModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Matricula")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Usuarios");
-                });
-
             modelBuilder.Entity("WebAppAula02.Models.LivroViewModel", b =>
                 {
                     b.Property<int>("Id")
@@ -111,23 +86,23 @@ namespace WebAppAula02.Migrations
                     b.Property<DateTime>("DiaReserva")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EstudanteId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuariosId")
-                        .HasColumnType("int");
-
                     b.Property<int>("LivroId")
                         .HasColumnType("int");
 
                     b.Property<int>("LivrosId")
                         .HasColumnType("int");
 
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuariosId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("UsuariosId");
-
                     b.HasIndex("LivrosId");
+
+                    b.HasIndex("UsuariosId");
 
                     b.ToTable("Reservas");
                 });
@@ -183,21 +158,21 @@ namespace WebAppAula02.Migrations
 
             modelBuilder.Entity("WebAppAula02.Models.Reserva", b =>
                 {
-                    b.HasOne("WebAppAula02.Models.EstudanteViewModel", "Usuarios")
-                        .WithMany()
-                        .HasForeignKey("UsuariosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("WebAppAula02.Models.LivroViewModel", "Livros")
                         .WithMany()
                         .HasForeignKey("LivrosId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Usuarios");
+                    b.HasOne("WebAppAula02.Models.UsuarioViewModel", "Usuarios")
+                        .WithMany()
+                        .HasForeignKey("UsuariosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Livros");
+
+                    b.Navigation("Usuarios");
                 });
 #pragma warning restore 612, 618
         }

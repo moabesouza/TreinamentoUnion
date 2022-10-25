@@ -12,8 +12,8 @@ using WebAppAula02.Data;
 namespace WebAppAula02.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221017230934_Correcao")]
-    partial class Correcao
+    [Migration("20221024160805_DbBiblioteca")]
+    partial class DbBiblioteca
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,31 +39,6 @@ namespace WebAppAula02.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Autores");
-                });
-
-            modelBuilder.Entity("WebAppAula02.Models.EstudanteViewModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Matricula")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Estudantes");
                 });
 
             modelBuilder.Entity("WebAppAula02.Models.LivroViewModel", b =>
@@ -113,31 +88,69 @@ namespace WebAppAula02.Migrations
                     b.Property<DateTime>("DiaReserva")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EstudanteId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EstudantesId")
-                        .HasColumnType("int");
-
                     b.Property<int>("LivroId")
                         .HasColumnType("int");
 
                     b.Property<int>("LivrosId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("EstudantesId");
+                    b.Property<int>("UsuariosId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("LivrosId");
 
+                    b.HasIndex("UsuariosId");
+
                     b.ToTable("Reservas");
+                });
+
+            modelBuilder.Entity("WebAppAula02.Models.UsuarioViewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime?>("DataAtualizacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Perfil")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Senha")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("WebAppAula02.Models.LivroViewModel", b =>
                 {
                     b.HasOne("WebAppAula02.Models.AutorViewModel", "Autores")
-                        .WithMany("Livros")
+                        .WithMany()
                         .HasForeignKey("AutoresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -147,26 +160,21 @@ namespace WebAppAula02.Migrations
 
             modelBuilder.Entity("WebAppAula02.Models.Reserva", b =>
                 {
-                    b.HasOne("WebAppAula02.Models.EstudanteViewModel", "Estudantes")
-                        .WithMany()
-                        .HasForeignKey("EstudantesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("WebAppAula02.Models.LivroViewModel", "Livros")
                         .WithMany()
                         .HasForeignKey("LivrosId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Estudantes");
+                    b.HasOne("WebAppAula02.Models.UsuarioViewModel", "Usuarios")
+                        .WithMany()
+                        .HasForeignKey("UsuariosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Livros");
-                });
 
-            modelBuilder.Entity("WebAppAula02.Models.AutorViewModel", b =>
-                {
-                    b.Navigation("Livros");
+                    b.Navigation("Usuarios");
                 });
 #pragma warning restore 612, 618
         }

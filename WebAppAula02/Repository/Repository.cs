@@ -67,6 +67,7 @@ namespace WebAppAula02.Repository
             return _context.Usuarios.FirstOrDefault(x => x.Login.ToUpper() == login.ToUpper());
         }
 
+        
 
     }
 }
